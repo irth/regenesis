@@ -42,7 +42,7 @@ func (c *CategoryHomeScreen) Scene() *simple.Scene {
 				"search",
 				simple.Pos(simple.Abs(150), simple.Abs(500), simple.Percent(100), simple.Abs(50)),
 				"(back)",
-				nil,
+				func(a *simple.App, b *simple.Button) error { c.r.Pop(); return nil },
 			),
 		},
 	}

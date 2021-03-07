@@ -24,7 +24,7 @@ func NewCategorySelectScreen(r *Regenesis, categories []Category) Screen {
 
 func (c *CategorySelectScreen) clickHandler(a *simple.App, cat Category) error {
 	categoryHomeScreen := NewCategoryHomeScreen(c.r, cat)
-	a.NextScene(categoryHomeScreen.Scene())
+	c.r.Push(categoryHomeScreen)
 	return nil
 }
 
