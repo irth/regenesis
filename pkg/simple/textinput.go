@@ -13,13 +13,17 @@ type TextInput struct {
 	Position
 }
 
+func NewTextInput(id string, pos Position, value string, onUpdate UpdateHandler) *TextInput {
+	return &TextInput{id, value, onUpdate, pos}
+}
+
 func (t *TextInput) Render() (string, error) {
 	return fmt.Sprintf("textinput:%s %s %s", t.ID, t.Position.Render(), t.Value), nil
 }
 
 func (t *TextInput) Update(out Output) ([]BoundEventHandler, error) {
 	value, updated := out.Input(t.ID)
-	if !updated {
+	if !updated || t.OnUpdate == nil {
 		return nil, nil
 	}
 

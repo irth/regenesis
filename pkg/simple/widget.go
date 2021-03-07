@@ -10,9 +10,9 @@ type Percent int
 
 func (val Percent) Render() string { return fmt.Sprintf("%d%%", val) }
 
-type Absolute int
+type Abs int
 
-func (val Absolute) Render() string { return fmt.Sprintf("%d", val) }
+func (val Abs) Render() string { return fmt.Sprintf("%d", val) }
 
 type relative bool
 
@@ -32,6 +32,10 @@ type Position struct {
 	Y      Coordinate
 	Width  Coordinate
 	Height Coordinate
+}
+
+func Pos(x, y, w, h Coordinate) Position {
+	return Position{x, y, w, h}
 }
 
 func (p Position) Render() string {
