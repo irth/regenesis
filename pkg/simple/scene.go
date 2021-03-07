@@ -6,7 +6,7 @@ import (
 )
 
 type Scene struct {
-	Widgets []Widget
+	Widgets WidgetList
 }
 
 type BoundEventHandler func(app *App) error
@@ -27,14 +27,12 @@ func (s *Scene) Render() ([]BoundEventHandler, error) {
 		return nil, fmt.Errorf("couldn't start simple: %w", err)
 	}
 
-	for _, widget := range s.Widgets {
-		data, err := widget.Render()
-		if err != nil {
-			return nil, fmt.Errorf("an error occured while drawing the widget: %w", err)
-		}
-		stdin.Write([]byte(data))
-		stdin.Write([]byte("\n"))
+	data, err := s.Widgets.Render()
+	if err != nil {
+		return nil, fmt.Errorf("an error occured while drawing a widget: %w", err)
 	}
+	stdin.Write([]byte(data))
+	stdin.Write([]byte("\n"))
 	stdin.Close()
 
 	parsed, err := ParseOutput(stdout)
@@ -42,13 +40,9 @@ func (s *Scene) Render() ([]BoundEventHandler, error) {
 		return nil, fmt.Errorf("failed to read simple's output: %w", err)
 	}
 
-	var handlersToRun []BoundEventHandler
-	for _, widget := range s.Widgets {
-		handlers, err := widget.Update(parsed)
-		if err != nil {
-			return nil, err
-		}
-		handlersToRun = append(handlersToRun, handlers...)
+	handlersToRun, err := s.Widgets.Update(parsed)
+	if err != nil {
+		return nil, fmt.Errorf("while running update handlers: %w", err)
 	}
 
 	return handlersToRun, nil
