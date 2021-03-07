@@ -25,5 +25,5 @@ func (w WidgetList) Update(out Output) ([]BoundEventHandler, error) {
 		}
 		handlers = append(handlers, h...)
 	}
-	return nil, nil
+	return handlers, nil
 }

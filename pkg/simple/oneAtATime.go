@@ -7,7 +7,7 @@ type OneAtATime struct {
 	lock     sync.Mutex
 }
 
-func (o OneAtATime) Lock() bool {
+func (o *OneAtATime) Lock() bool {
 	o.lock.Lock()
 	defer o.lock.Unlock()
 	if !o.reserved {
@@ -17,7 +17,7 @@ func (o OneAtATime) Lock() bool {
 	return false
 }
 
-func (o OneAtATime) Unlock() {
+func (o *OneAtATime) Unlock() {
 	o.lock.Lock()
 	defer o.lock.Unlock()
 	o.reserved = false
