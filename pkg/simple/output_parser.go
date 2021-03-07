@@ -31,7 +31,7 @@ func ParseOutput(r io.Reader) (Output, error) {
 		case "selected":
 			out.selected[strings.TrimSpace(split[1])] = true
 		case "input":
-			split := strings.SplitN(line, ":", 2)
+			split := strings.SplitN(split[1], ":", 2)
 			if len(split) != 2 {
 				continue
 			}
