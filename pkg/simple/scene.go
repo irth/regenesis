@@ -2,7 +2,6 @@ package simple
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os/exec"
 )
 
@@ -34,17 +33,18 @@ func (s *Scene) Render() ([]BoundEventHandler, error) {
 			return nil, fmt.Errorf("an error occured while drawing the widget: %w", err)
 		}
 		stdin.Write([]byte(data))
+		stdin.Write([]byte("\n"))
 	}
 	stdin.Close()
 
-	output, err := ioutil.ReadAll(stdout)
+	parsed, err := ParseOutput(stdout)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read simple's output: %w", output)
+		return nil, fmt.Errorf("failed to read simple's output: %w", err)
 	}
 
 	var handlersToRun []BoundEventHandler
 	for _, widget := range s.Widgets {
-		handlers, err := widget.Update(string(output))
+		handlers, err := widget.Update(parsed)
 		if err != nil {
 			return nil, err
 		}

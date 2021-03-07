@@ -40,5 +40,5 @@ func (p Position) Render() string {
 
 type Widget interface {
 	Render() (string, error)
-	Update(stdout string) ([]BoundEventHandler, error)
+	Update(stdout Output) ([]BoundEventHandler, error)
 }

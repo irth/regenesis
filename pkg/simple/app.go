@@ -41,3 +41,12 @@ func (a *App) Render() error {
 func (a *App) NextScene(scene *Scene) {
 	a.nextScene = scene
 }
+
+func (a *App) RunForever() error {
+	for {
+		err := a.Render()
+		if err != nil {
+			return err
+		}
+	}
+}
