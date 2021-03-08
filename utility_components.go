@@ -6,7 +6,7 @@ func Header() simple.Widget {
 	return simple.WidgetList{
 		simple.Left,
 		simple.FontSize(100),
-		simple.NewLabel(
+		simple.Label(
 			simple.Pos(simple.Abs(100), simple.Abs(100), simple.Percent(100), simple.Abs(50)),
 			"LibGen",
 		),
@@ -17,16 +17,16 @@ func Header() simple.Widget {
 func BackButton(r *Regenesis) simple.Widget {
 	return simple.WidgetList{
 		// padding
-		simple.NewLabel(
+		simple.Label(
 			simple.Pos(simple.Abs(100), simple.Step, simple.Percent(100), simple.Abs(50)),
 			" ",
 		),
 		// button
-		simple.NewButton(
+		simple.Button(
 			"back",
 			simple.Pos(simple.Abs(100), simple.Step, simple.Percent(100), simple.Abs(50)),
 			"(back)",
-			func(a *simple.App, b *simple.Button) error { r.Pop(); return nil },
+			func(a *simple.App, b *simple.ButtonWidget) error { r.Pop(); return nil },
 		),
 	}
 }
