@@ -18,13 +18,13 @@ func NewCategoryHomeScreen(r *Regenesis, category Category) simple.Scene {
 	return &CategoryHomeScreen{r, category, []libgen.Book{}, ""}
 }
 
-func (c *CategoryHomeScreen) BookWidget(id string, b libgen.Book) simple.Widget {
-	return simple.NewButton(
-		id,
-		simple.Pos(simple.Abs(150), simple.Step, simple.Percent(80), simple.Abs(50)),
-		fmt.Sprintf("%s - %s", b.Author(), b.Title()),
-		nil,
-	)
+func (c *CategoryHomeScreen) Render() (simple.Widget, error) {
+	return simple.WidgetList{
+		Header(),
+		c.searchWidget(),
+		c.bookListWidget(c.Results, 15),
+		BackButton(c.r),
+	}, nil
 }
 
 func (c *CategoryHomeScreen) searchInputHandler(a *simple.App, t *simple.TextInput, newValue string) error {
@@ -34,32 +34,13 @@ func (c *CategoryHomeScreen) searchInputHandler(a *simple.App, t *simple.TextInp
 	if err != nil {
 		// TODO: display search err
 		panic(err)
-		return nil
 	}
 
-	c.r.Replace(c)
 	return nil
 }
 
-func (c *CategoryHomeScreen) Render() (simple.Widget, error) {
-	println("rendering home screen")
-	books := simple.WidgetList{}
-	end := 15
-	if len(c.Results) < end {
-		end = len(c.Results)
-	}
-	println("halko")
-	for idx, book := range c.Results[:end] {
-		println(book.Title())
-		books = append(books, c.BookWidget(fmt.Sprintf("book_%d", idx), book))
-	}
-	print("\n[[[")
-	co, _ := books.Render()
-	print(co)
-	println("]]]")
-
+func (c *CategoryHomeScreen) searchWidget() simple.Widget {
 	return simple.WidgetList{
-		Header(),
 		simple.FontSize(64),
 		simple.NewLabel(
 			simple.Pos(simple.Abs(100), simple.Abs(300), simple.Percent(100), simple.Abs(100)),
@@ -76,17 +57,28 @@ func (c *CategoryHomeScreen) Render() (simple.Widget, error) {
 			c.SearchQuery,
 			c.searchInputHandler,
 		),
+	}
+}
+
+func (c *CategoryHomeScreen) bookListWidget(books []libgen.Book, maxResults int) simple.Widget {
+	widgets := simple.WidgetList{
 		simple.FontSize(32),
-		books,
-		simple.NewLabel(
-			simple.Pos(simple.Abs(100), simple.Step, simple.Percent(100), simple.Abs(50)),
-			" ",
-		),
-		simple.NewButton(
-			"back",
-			simple.Pos(simple.Abs(100), simple.Step, simple.Percent(100), simple.Abs(50)),
-			"(back)",
-			func(a *simple.App, b *simple.Button) error { c.r.Pop(); return nil },
-		),
-	}, nil
+	}
+
+	end := maxResults
+	if len(books) < end {
+		end = len(books)
+	}
+
+	for idx, book := range books[:end] {
+		widget := simple.NewButton(
+			fmt.Sprintf("book_%d", idx),
+			simple.Pos(simple.Abs(150), simple.Step, simple.Percent(80), simple.Abs(50)),
+			fmt.Sprintf("%s - %s", book.Author(), book.Title()),
+			nil,
+		)
+		widgets = append(widgets, widget)
+	}
+
+	return widgets
 }
