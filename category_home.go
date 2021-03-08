@@ -88,7 +88,10 @@ func (c *CategoryHomeScreen) bookWidget(id string, book libgen.Book) ui.Widget {
 			id,
 			pos,
 			book.Title(),
-			nil,
+			func(a *ui.App, b *ui.ButtonWidget) error {
+				c.r.Push(NewBookScreen(c.r, book))
+				return nil
+			},
 		),
 		ui.FontSize(28),
 		ui.Label(

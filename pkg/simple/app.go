@@ -50,3 +50,11 @@ func (a *App) RunForever() error {
 		}
 	}
 }
+
+func (a *App) ScreenWidth() int {
+	return 1404
+}
+
+func (a *App) ScreenHeight() int {
+	return 1872
+}
