@@ -25,7 +25,7 @@ func (a *App) Render() error {
 	a.currentScene = a.nextScene
 	eventHandlers, err := RunScene(a.currentScene)
 	if err != nil {
-		return fmt.Errorf("while rendering the scene: %w", err)
+		return fmt.Errorf("while running the scene: %w", err)
 	}
 
 	for _, eventHandler := range eventHandlers {
