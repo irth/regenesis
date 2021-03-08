@@ -2,7 +2,7 @@ package simple
 
 import "strings"
 
-type CommandWidget struct {
+type WidgetCommand struct {
 	Name      string
 	ID        string
 	Position  Position
@@ -10,7 +10,7 @@ type CommandWidget struct {
 	Multiline bool
 }
 
-func (w CommandWidget) Render() (string, error) {
+func (w WidgetCommand) Render() (string, error) {
 	var str strings.Builder
 	if w.Multiline {
 		str.WriteRune('[')

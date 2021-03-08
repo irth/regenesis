@@ -11,7 +11,7 @@ const (
 )
 
 func (j Justify) Render() (string, error) {
-	return CommandDirective{"justify", string(j)}.Render()
+	return DirectiveCommand{"justify", string(j)}.Render()
 }
 
 func (j Justify) Update(out Output) ([]BoundEventHandler, error) {

@@ -16,7 +16,7 @@ func Button(id string, pos Position, name string, onClick ClickHandler) *ButtonW
 }
 
 func (b *ButtonWidget) Render() (string, error) {
-	return CommandWidget{
+	return WidgetCommand{
 		Name:     "button",
 		ID:       b.ID,
 		Position: b.Position,

@@ -12,7 +12,7 @@ func Label(pos Position, text string) *LabelWidget {
 }
 
 func (b *LabelWidget) Render() (string, error) {
-	return CommandWidget{
+	return WidgetCommand{
 		Name:     "label",
 		Position: b.Position,
 		Extra:    b.Text,

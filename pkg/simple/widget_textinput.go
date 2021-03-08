@@ -16,7 +16,7 @@ func TextInput(id string, pos Position, value string, onUpdate UpdateHandler) *T
 }
 
 func (t *TextInputWidget) Render() (string, error) {
-	return CommandWidget{
+	return WidgetCommand{
 		Name:     "textinput",
 		ID:       t.ID,
 		Position: t.Position,
