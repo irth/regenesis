@@ -22,7 +22,7 @@ func (c *CategoryHomeScreen) Render() (simple.Widget, error) {
 	return simple.WidgetList{
 		Header(),
 		c.searchWidget(),
-		c.bookListWidget(c.Results, 15),
+		c.bookListWidget(c.Results, 10),
 		BackButton(c.r),
 	}, nil
 }
@@ -71,14 +71,29 @@ func (c *CategoryHomeScreen) bookListWidget(books []libgen.Book, maxResults int)
 	}
 
 	for idx, book := range books[:end] {
-		widget := simple.NewButton(
-			fmt.Sprintf("book_%d", idx),
-			simple.Pos(simple.Abs(150), simple.Step, simple.Percent(80), simple.Abs(50)),
-			fmt.Sprintf("%s - %s", book.Author(), book.Title()),
-			nil,
+		widgets = append(
+			widgets,
+			c.bookWidget(fmt.Sprintf("book_%d", idx), book),
 		)
-		widgets = append(widgets, widget)
 	}
 
 	return widgets
+}
+
+func (c *CategoryHomeScreen) bookWidget(id string, book libgen.Book) simple.Widget {
+	pos := simple.Pos(simple.Abs(150), simple.Step, simple.Percent(80), simple.Abs(50))
+	return simple.WidgetList{
+		simple.FontSize(32),
+		simple.NewButton(
+			id,
+			pos,
+			book.Title(),
+			nil,
+		),
+		simple.FontSize(28),
+		simple.NewLabel(
+			simple.Pos(simple.Abs(150), simple.Step, simple.Percent(80), simple.Abs(10)),
+			fmt.Sprintf("%s · %s · %s · %s", book.Size(), book.Format(), book.Language(), book.Author()),
+		),
+	}
 }
