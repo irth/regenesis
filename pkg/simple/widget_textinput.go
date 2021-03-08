@@ -1,21 +1,21 @@
 package simple
 
-var _ Widget = &TextInput{}
+var _ Widget = &TextInputWidget{}
 
-type UpdateHandler func(a *App, t *TextInput, value string) error
+type UpdateHandler func(a *App, t *TextInputWidget, value string) error
 
-type TextInput struct {
+type TextInputWidget struct {
 	ID       string
 	Value    string
 	OnUpdate UpdateHandler
 	Position
 }
 
-func NewTextInput(id string, pos Position, value string, onUpdate UpdateHandler) *TextInput {
-	return &TextInput{id, value, onUpdate, pos}
+func TextInput(id string, pos Position, value string, onUpdate UpdateHandler) *TextInputWidget {
+	return &TextInputWidget{id, value, onUpdate, pos}
 }
 
-func (t *TextInput) Render() (string, error) {
+func (t *TextInputWidget) Render() (string, error) {
 	return CommandWidget{
 		Name:     "textinput",
 		ID:       t.ID,
@@ -24,7 +24,7 @@ func (t *TextInput) Render() (string, error) {
 	}.Render()
 }
 
-func (t *TextInput) Update(out Output) ([]BoundEventHandler, error) {
+func (t *TextInputWidget) Update(out Output) ([]BoundEventHandler, error) {
 	value, updated := out.Input(t.ID)
 	if !updated || t.OnUpdate == nil {
 		return nil, nil

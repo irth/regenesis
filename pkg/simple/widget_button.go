@@ -1,21 +1,21 @@
 package simple
 
-var _ Widget = &Button{}
+var _ Widget = &ButtonWidget{}
 
-type ClickHandler func(a *App, b *Button) error
+type ClickHandler func(a *App, b *ButtonWidget) error
 
-type Button struct {
+type ButtonWidget struct {
 	ID      string
 	Name    string
 	OnClick ClickHandler
 	Position
 }
 
-func NewButton(id string, pos Position, name string, onClick ClickHandler) *Button {
-	return &Button{id, name, onClick, pos}
+func Button(id string, pos Position, name string, onClick ClickHandler) *ButtonWidget {
+	return &ButtonWidget{id, name, onClick, pos}
 }
 
-func (b *Button) Render() (string, error) {
+func (b *ButtonWidget) Render() (string, error) {
 	return CommandWidget{
 		Name:     "button",
 		ID:       b.ID,
@@ -24,7 +24,7 @@ func (b *Button) Render() (string, error) {
 	}.Render()
 }
 
-func (b *Button) Update(out Output) ([]BoundEventHandler, error) {
+func (b *ButtonWidget) Update(out Output) ([]BoundEventHandler, error) {
 	if !out.Selected(b.ID) || b.OnClick == nil {
 		return nil, nil
 	}

@@ -1,17 +1,17 @@
 package simple
 
-var _ Widget = &Label{}
+var _ Widget = &LabelWidget{}
 
-type Label struct {
+type LabelWidget struct {
 	Text string
 	Position
 }
 
-func NewLabel(pos Position, text string) *Label {
-	return &Label{text, pos}
+func Label(pos Position, text string) *LabelWidget {
+	return &LabelWidget{text, pos}
 }
 
-func (b *Label) Render() (string, error) {
+func (b *LabelWidget) Render() (string, error) {
 	return CommandWidget{
 		Name:     "label",
 		Position: b.Position,
@@ -19,6 +19,6 @@ func (b *Label) Render() (string, error) {
 	}.Render()
 }
 
-func (b *Label) Update(out Output) ([]BoundEventHandler, error) {
+func (b *LabelWidget) Update(out Output) ([]BoundEventHandler, error) {
 	return nil, nil
 }

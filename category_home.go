@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	libgen "github.com/irth/golibgen"
-	"github.com/irth/regenesis/pkg/simple"
+	ui "github.com/irth/regenesis/pkg/simple"
 )
 
 type CategoryHomeScreen struct {
@@ -14,12 +14,12 @@ type CategoryHomeScreen struct {
 	SearchQuery string
 }
 
-func NewCategoryHomeScreen(r *Regenesis, category Category) simple.Scene {
+func NewCategoryHomeScreen(r *Regenesis, category Category) ui.Scene {
 	return &CategoryHomeScreen{r, category, []libgen.Book{}, ""}
 }
 
-func (c *CategoryHomeScreen) Render() (simple.Widget, error) {
-	return simple.WidgetList{
+func (c *CategoryHomeScreen) Render() (ui.Widget, error) {
+	return ui.WidgetList{
 		Header(),
 		c.searchWidget(),
 		c.bookListWidget(c.Results, 10),
@@ -27,7 +27,7 @@ func (c *CategoryHomeScreen) Render() (simple.Widget, error) {
 	}, nil
 }
 
-func (c *CategoryHomeScreen) searchInputHandler(a *simple.App, t *simple.TextInput, newValue string) error {
+func (c *CategoryHomeScreen) searchInputHandler(a *ui.App, t *ui.TextInputWidget, newValue string) error {
 	var err error
 	c.SearchQuery = newValue
 	c.Results, err = c.Category.Provider.Find(newValue)
@@ -39,30 +39,30 @@ func (c *CategoryHomeScreen) searchInputHandler(a *simple.App, t *simple.TextInp
 	return nil
 }
 
-func (c *CategoryHomeScreen) searchWidget() simple.Widget {
-	return simple.WidgetList{
-		simple.FontSize(64),
-		simple.NewLabel(
-			simple.Pos(simple.Abs(100), simple.Abs(300), simple.Percent(100), simple.Abs(100)),
+func (c *CategoryHomeScreen) searchWidget() ui.Widget {
+	return ui.WidgetList{
+		ui.FontSize(64),
+		ui.Label(
+			ui.Pos(ui.Abs(100), ui.Abs(300), ui.Percent(100), ui.Abs(100)),
 			c.Category.Name,
 		),
-		simple.FontSize(48),
-		simple.NewLabel(
-			simple.Pos(simple.Abs(150), simple.Step, simple.Percent(100), simple.Abs(100)),
+		ui.FontSize(48),
+		ui.Label(
+			ui.Pos(ui.Abs(150), ui.Step, ui.Percent(100), ui.Abs(100)),
 			"Search",
 		),
-		simple.NewTextInput(
+		ui.TextInput(
 			"search",
-			simple.Pos(simple.Step, simple.Same, simple.Percent(60), simple.Abs(50)),
+			ui.Pos(ui.Step, ui.Same, ui.Percent(60), ui.Abs(50)),
 			c.SearchQuery,
 			c.searchInputHandler,
 		),
 	}
 }
 
-func (c *CategoryHomeScreen) bookListWidget(books []libgen.Book, maxResults int) simple.Widget {
-	widgets := simple.WidgetList{
-		simple.FontSize(32),
+func (c *CategoryHomeScreen) bookListWidget(books []libgen.Book, maxResults int) ui.Widget {
+	widgets := ui.WidgetList{
+		ui.FontSize(32),
 	}
 
 	end := maxResults
@@ -80,19 +80,19 @@ func (c *CategoryHomeScreen) bookListWidget(books []libgen.Book, maxResults int)
 	return widgets
 }
 
-func (c *CategoryHomeScreen) bookWidget(id string, book libgen.Book) simple.Widget {
-	pos := simple.Pos(simple.Abs(150), simple.Step, simple.Percent(80), simple.Abs(50))
-	return simple.WidgetList{
-		simple.FontSize(32),
-		simple.NewButton(
+func (c *CategoryHomeScreen) bookWidget(id string, book libgen.Book) ui.Widget {
+	pos := ui.Pos(ui.Abs(150), ui.Step, ui.Percent(80), ui.Abs(50))
+	return ui.WidgetList{
+		ui.FontSize(32),
+		ui.Button(
 			id,
 			pos,
 			book.Title(),
 			nil,
 		),
-		simple.FontSize(28),
-		simple.NewLabel(
-			simple.Pos(simple.Abs(150), simple.Step, simple.Percent(80), simple.Abs(10)),
+		ui.FontSize(28),
+		ui.Label(
+			ui.Pos(ui.Abs(150), ui.Step, ui.Percent(80), ui.Abs(10)),
 			fmt.Sprintf("%s · %s · %s · %s", book.Size(), book.Format(), book.Language(), book.Author()),
 		),
 	}

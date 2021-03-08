@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	libgen "github.com/irth/golibgen"
-	"github.com/irth/regenesis/pkg/simple"
+	ui "github.com/irth/regenesis/pkg/simple"
 )
 
 type Category struct {
@@ -18,40 +18,40 @@ type CategorySelectScreen struct {
 	Categories []Category
 }
 
-func NewCategorySelectScreen(r *Regenesis, categories []Category) simple.Scene {
+func NewCategorySelectScreen(r *Regenesis, categories []Category) ui.Scene {
 	return &CategorySelectScreen{r, categories}
 }
 
-func (c *CategorySelectScreen) clickHandler(a *simple.App, cat Category) error {
+func (c *CategorySelectScreen) clickHandler(a *ui.App, cat Category) error {
 	categoryHomeScreen := NewCategoryHomeScreen(c.r, cat)
 	c.r.Push(categoryHomeScreen)
 	return nil
 }
 
-func (c *CategorySelectScreen) categoryWidget(id string, category Category) simple.Widget {
-	return simple.NewButton(
+func (c *CategorySelectScreen) categoryWidget(id string, category Category) ui.Widget {
+	return ui.Button(
 		id,
-		simple.Pos(simple.Abs(100), simple.Step, simple.Percent(100), simple.Abs(100)),
+		ui.Pos(ui.Abs(100), ui.Step, ui.Percent(100), ui.Abs(100)),
 		category.Name,
-		func(a *simple.App, b *simple.Button) error {
+		func(a *ui.App, b *ui.ButtonWidget) error {
 			return c.clickHandler(a, category)
 		},
 	)
 }
 
-func (c *CategorySelectScreen) Render() (simple.Widget, error) {
-	categories := simple.WidgetList{}
+func (c *CategorySelectScreen) Render() (ui.Widget, error) {
+	categories := ui.WidgetList{}
 	for idx, cat := range c.Categories {
 		categories = append(categories, c.categoryWidget(fmt.Sprintf("category_%d", idx), cat))
 	}
 
-	return simple.WidgetList{
+	return ui.WidgetList{
 		Header(),
-		simple.NewLabel(
-			simple.Pos(simple.Abs(100), simple.Abs(300), simple.Percent(100), simple.Abs(100)),
+		ui.Label(
+			ui.Pos(ui.Abs(100), ui.Abs(300), ui.Percent(100), ui.Abs(100)),
 			"Choose a category",
 		),
-		simple.FontSize(64),
+		ui.FontSize(64),
 		categories,
 	}, nil
 }
