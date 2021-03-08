@@ -5,13 +5,13 @@ import (
 	"os/exec"
 )
 
-type Scene struct {
-	Widgets WidgetList
+type Scene interface {
+	Render() (Widget, error)
 }
 
 type BoundEventHandler func(app *App) error
 
-func (s *Scene) Render() ([]BoundEventHandler, error) {
+func RunScene(s Scene) ([]BoundEventHandler, error) {
 	cmd := exec.Command("simple")
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
@@ -27,12 +27,17 @@ func (s *Scene) Render() ([]BoundEventHandler, error) {
 		return nil, fmt.Errorf("couldn't start simple: %w", err)
 	}
 
-	data, err := s.Widgets.Render()
+	widgets, err := s.Render()
 	if err != nil {
-		return nil, fmt.Errorf("an error occured while drawing a widget: %w", err)
+		return nil, fmt.Errorf("while rendering the scene: %w", err)
 	}
-	stdin.Write([]byte(data))
-	stdin.Write([]byte("\n"))
+
+	sas, err := widgets.Render()
+	if err != nil {
+		return nil, fmt.Errorf("while rendering a widget: %w", err)
+	}
+
+	stdin.Write([]byte(sas))
 	stdin.Close()
 
 	parsed, err := ParseOutput(stdout)
@@ -40,7 +45,12 @@ func (s *Scene) Render() ([]BoundEventHandler, error) {
 		return nil, fmt.Errorf("failed to read simple's output: %w", err)
 	}
 
-	handlersToRun, err := s.Widgets.Update(parsed)
+	err = cmd.Wait()
+	if err != nil {
+		return nil, fmt.Errorf("error ocurred when runing simple: %w", err)
+	}
+
+	handlersToRun, err := widgets.Update(parsed)
 	if err != nil {
 		return nil, fmt.Errorf("while running update handlers: %w", err)
 	}

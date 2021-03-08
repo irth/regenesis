@@ -1,10 +1,8 @@
 package simple
 
-import "fmt"
-
 var _ Widget = &TextInput{}
 
-type UpdateHandler func(a *App, t *TextInput) error
+type UpdateHandler func(a *App, t *TextInput, value string) error
 
 type TextInput struct {
 	ID       string
@@ -18,7 +16,12 @@ func NewTextInput(id string, pos Position, value string, onUpdate UpdateHandler)
 }
 
 func (t *TextInput) Render() (string, error) {
-	return fmt.Sprintf("textinput:%s %s %s", t.ID, t.Position.Render(), t.Value), nil
+	return CommandWidget{
+		Name:     "textinput",
+		ID:       t.ID,
+		Position: t.Position,
+		Extra:    t.Value,
+	}.Render()
 }
 
 func (t *TextInput) Update(out Output) ([]BoundEventHandler, error) {
@@ -27,11 +30,9 @@ func (t *TextInput) Update(out Output) ([]BoundEventHandler, error) {
 		return nil, nil
 	}
 
-	t.Value = value
-
 	return []BoundEventHandler{
 		func(a *App) error {
-			return t.OnUpdate(a, t)
+			return t.OnUpdate(a, t, value)
 		},
 	}, nil
 }

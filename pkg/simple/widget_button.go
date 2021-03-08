@@ -1,7 +1,5 @@
 package simple
 
-import "fmt"
-
 var _ Widget = &Button{}
 
 type ClickHandler func(a *App, b *Button) error
@@ -18,7 +16,12 @@ func NewButton(id string, pos Position, name string, onClick ClickHandler) *Butt
 }
 
 func (b *Button) Render() (string, error) {
-	return fmt.Sprintf("button:%s %s %s", b.ID, b.Position.Render(), b.Name), nil
+	return CommandWidget{
+		Name:     "button",
+		ID:       b.ID,
+		Position: b.Position,
+		Extra:    b.Name,
+	}.Render()
 }
 
 func (b *Button) Update(out Output) ([]BoundEventHandler, error) {

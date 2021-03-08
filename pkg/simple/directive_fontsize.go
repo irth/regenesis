@@ -1,13 +1,13 @@
 package simple
 
-import "fmt"
+import "strconv"
 
 var _ Widget = FontSize(10)
 
 type FontSize int
 
 func (f FontSize) Render() (string, error) {
-	return fmt.Sprintf("@fontsize %d", f), nil
+	return CommandDirective{"fontsize", strconv.Itoa(int(f))}.Render()
 }
 
 func (f FontSize) Update(out Output) ([]BoundEventHandler, error) {

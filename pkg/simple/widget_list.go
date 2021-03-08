@@ -5,15 +5,20 @@ import "strings"
 type WidgetList []Widget
 
 func (w WidgetList) Render() (string, error) {
-	children := []string{}
+	var sb strings.Builder
+
 	for _, widget := range w {
+		if widget == nil {
+			continue
+		}
+
 		out, err := widget.Render()
 		if err != nil {
 			return "", err
 		}
-		children = append(children, out)
+		sb.WriteString(out)
 	}
-	return strings.Join(children, "\n"), nil
+	return sb.String(), nil
 }
 
 func (w WidgetList) Update(out Output) ([]BoundEventHandler, error) {

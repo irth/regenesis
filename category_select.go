@@ -18,7 +18,7 @@ type CategorySelectScreen struct {
 	Categories []Category
 }
 
-func NewCategorySelectScreen(r *Regenesis, categories []Category) Screen {
+func NewCategorySelectScreen(r *Regenesis, categories []Category) simple.Scene {
 	return &CategorySelectScreen{r, categories}
 }
 
@@ -39,21 +39,19 @@ func (c *CategorySelectScreen) categoryWidget(id string, category Category) simp
 	)
 }
 
-func (c *CategorySelectScreen) Scene() *simple.Scene {
+func (c *CategorySelectScreen) Render() (simple.Widget, error) {
 	categories := simple.WidgetList{}
 	for idx, cat := range c.Categories {
 		categories = append(categories, c.categoryWidget(fmt.Sprintf("category_%d", idx), cat))
 	}
 
-	return &simple.Scene{
-		Widgets: []simple.Widget{
-			Header(),
-			simple.NewLabel(
-				simple.Pos(simple.Abs(100), simple.Abs(300), simple.Percent(100), simple.Abs(100)),
-				"Choose a category",
-			),
-			simple.FontSize(64),
-			categories,
-		},
-	}
+	return simple.WidgetList{
+		Header(),
+		simple.NewLabel(
+			simple.Pos(simple.Abs(100), simple.Abs(300), simple.Percent(100), simple.Abs(100)),
+			"Choose a category",
+		),
+		simple.FontSize(64),
+		categories,
+	}, nil
 }

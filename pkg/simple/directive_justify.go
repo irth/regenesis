@@ -1,7 +1,5 @@
 package simple
 
-import "fmt"
-
 var _ Widget = Justify("")
 
 type Justify string
@@ -13,7 +11,7 @@ const (
 )
 
 func (j Justify) Render() (string, error) {
-	return fmt.Sprintf("@justify %s", j), nil
+	return CommandDirective{"justify", string(j)}.Render()
 }
 
 func (j Justify) Update(out Output) ([]BoundEventHandler, error) {

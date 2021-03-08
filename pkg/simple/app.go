@@ -5,12 +5,12 @@ import (
 )
 
 type App struct {
-	currentScene *Scene
-	nextScene    *Scene
+	currentScene Scene
+	nextScene    Scene
 	renderLock   OneAtATime
 }
 
-func NewApp(scene *Scene) *App {
+func NewApp(scene Scene) *App {
 	return &App{
 		nextScene: scene,
 	}
@@ -23,7 +23,7 @@ func (a *App) Render() error {
 	defer a.renderLock.Unlock()
 
 	a.currentScene = a.nextScene
-	eventHandlers, err := a.currentScene.Render()
+	eventHandlers, err := RunScene(a.currentScene)
 	if err != nil {
 		return fmt.Errorf("while rendering the scene: %w", err)
 	}
@@ -38,7 +38,7 @@ func (a *App) Render() error {
 	return nil
 }
 
-func (a *App) NextScene(scene *Scene) {
+func (a *App) NextScene(scene Scene) {
 	a.nextScene = scene
 }
 

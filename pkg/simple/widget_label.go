@@ -1,7 +1,5 @@
 package simple
 
-import "fmt"
-
 var _ Widget = &Label{}
 
 type Label struct {
@@ -14,7 +12,11 @@ func NewLabel(pos Position, text string) *Label {
 }
 
 func (b *Label) Render() (string, error) {
-	return fmt.Sprintf("label %s %s", b.Position.Render(), b.Text), nil
+	return CommandWidget{
+		Name:     "label",
+		Position: b.Position,
+		Extra:    b.Text,
+	}.Render()
 }
 
 func (b *Label) Update(out Output) ([]BoundEventHandler, error) {
