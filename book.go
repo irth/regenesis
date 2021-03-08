@@ -43,7 +43,7 @@ func (b *BookScreen) Render() (ui.Widget, error) {
 			"download",
 			ui.Pos(ui.Abs(150), ui.Abs(630), ui.Abs(325), ui.Abs(75)),
 			"[download]",
-			nil, // TODO: actually download
+			b.download,
 		),
 		ui.FontSize(38),
 		ui.TextInput(
@@ -60,5 +60,14 @@ func (b *BookScreen) Render() (ui.Widget, error) {
 func (b *BookScreen) updateLocation(a *ui.App, t *ui.TextInputWidget, newValue string) error {
 	b.r.BookLocation = newValue
 	// TODO: store this somewhere permanently
+	return nil
+}
+
+func (b *BookScreen) download(a *ui.App, t *ui.ButtonWidget) error {
+	err := DownloadBook(b.Book, b.r.BookLocation)
+	if err != nil {
+		println(err)
+	}
+	// TODO: catch and display the returned error
 	return nil
 }
